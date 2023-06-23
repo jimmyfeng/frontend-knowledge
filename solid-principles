@@ -1,0 +1,192 @@
+Solid 编程原则是面向对象编程中的五个重要原则，它们帮助开发者创建可扩展、易维护的代码。这五个原则是：单一职责 (SRP)、开放封闭 (OCP)、里氏替换 (LSP)、接口隔离 (ISP) 和依赖反转 (DIP)。
+
+以下是使用 JavaScript 展示这些原则的例子：
+
+1. 单一职责原则 (SRP)：
+
+```javascript
+// 不好的例子：将多个职责放在一个类中
+class Employee {
+  constructor(name, type){
+    this.name = name;
+    this.type = type;
+  }
+
+  paySalary(){
+    // 计算并发放薪资
+  }
+
+  addDaysOff(){
+    // 分配休假
+  }
+
+  printReport(){
+    // 打印报告
+  }
+}
+
+// 好的例子：将不同职责分配给独立的类
+class Employee {
+  constructor(name, type){
+    this.name = name;
+    this.type = type;
+  }
+}
+
+class Finance {
+  paySalary(employee){
+    // 计算并发放薪资
+  }
+}
+
+class HR {
+  addDaysOff(employee){
+    // 分配休假
+  }
+}
+
+class Report {
+  print(employee){
+    // 打印报告
+  }
+}
+```
+
+2. 开放封闭原则 (OCP)：
+
+```javascript
+class Shape {
+  getArea() {
+    throw new Error("getArea 方法必须在子类中实现。");
+  }
+}
+
+class Rectangle extends Shape {
+  constructor(width, height){
+    super();
+    this.width = width;
+    this.height = height;
+  }
+
+  getArea(){
+    return this.width * this.height;
+  }
+}
+
+class Circle extends Shape {
+  constructor(radius) {
+    super();
+    this.radius = radius;
+  }
+
+  getArea(){
+    return Math.PI * Math.pow(this.radius, 2);
+  }
+}
+
+function calculateAreas(shapes) {
+  return shapes.reduce((acc, shape) => acc + shape.getArea(), 0);
+}
+```
+
+3. 里氏替换原则 (LSP)：
+
+```javascript
+class Bird {
+  fly() {
+    return "I can fly";
+  }
+}
+
+class Eagle extends Bird {}
+
+class Penguin extends Bird {
+  // 使用不恰当的方法替换 fly 方法
+  waddle() {
+    return "I can waddle";
+  }
+}
+
+// 好的例子：使用抽象基类定义正确的行为
+class Bird {
+  move() {
+    throw new Error("move 方法必须在子类中实现。");
+  }
+}
+
+class FlyBird extends Bird {
+  move() {
+    return "I can fly";
+  }
+}
+
+class WalkBird extends Bird {
+  move() {
+    return "I can walk";
+  }
+}
+
+class Eagle extends FlyBird {}
+class Penguin extends WalkBird {}
+```
+
+4. 接口隔离原则 (ISP)：
+
+JavaScript 没有接口，但可以使用 TypeScript 来演示此原则:
+
+```typescript
+interface Printer {
+  print(): void;
+}
+
+interface Scanner {
+  scan(): void;
+}
+
+class AllInOnePrinter implements Printer, Scanner {
+  print() {
+    // 实现打印功能
+  }
+
+  scan() {
+    // 实现扫描功能
+  }
+}
+
+class JustPrinter implements Printer {
+  print() {
+    // 实现打印功能
+  }
+}
+```
+
+5. 依赖反转原则 (DIP)：
+
+```javascript
+class ReportGenerator {
+  constructor(reportExporter){
+    this.reportExporter = reportExporter;
+  }
+
+  generate(report) {
+    const formattedReport = formatReport(report);
+    this.reportExporter.export(formattedReport);
+  }
+}
+
+class PDFExporter {
+  export(report){
+    // 导出 PDF 格式的报告
+  }
+}
+
+class CSVExporter {
+  export(report){
+    // 导出 CSV 格式的报告
+  }
+}
+
+const pdfExporter = new PDFExporter();
+const csvExporter = new CSVExporter();
+const reportGenerator = new ReportGenerator(pdfExporter);
+```
